@@ -98,8 +98,8 @@ def power_ball(generated, browser):
         print sorted(nums),
 
         # generate / print power number or w/e it's called
-        double = gen[10]
-        val = int(math.floor(double * 30) + 1)
+        double = gen[5]
+        val = int(math.floor(double * 26) + 1)
         print val
 
 # Firefox nextDouble():
@@ -123,8 +123,8 @@ def main():
     # Note: 
         # Safari tests have always turned up UNSAT
         # Wait for an update from Apple?
-    # browser = 'safari'
-    browser = 'chrome'
+     browser = 'safari'
+    #browser = 'chrome'
     # browser = 'firefox'
     print 'BROWSER: %s' % browser
 
