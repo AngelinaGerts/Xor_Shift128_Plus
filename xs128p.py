@@ -124,7 +124,7 @@ def main():
         # Safari tests have always turned up UNSAT
         # Wait for an update from Apple?
     # browser = 'safari'
-    browser = 'chrome'
+    browser = 'firefox'
     # browser = 'firefox'
     print 'BROWSER: %s' % browser
 
@@ -149,7 +149,7 @@ def main():
         generated.append(recovered)
 
     # setup symbolic state for xorshift128+
-    ostate0, ostate1 = BitVecs('ostate0 ostate1', 128)
+    ostate0, ostate1 = BitVecs('ostate0 ostate1', 64)
     sym_state0 = ostate0
     sym_state1 = ostate1
     slvr = Solver()
