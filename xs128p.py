@@ -113,9 +113,9 @@ def to_double(browser, out):
         double_bits = (out & 0xFFFFFFFFFFFFFFFF) | 0x3FF0000000000000
         double = struct.unpack('d', struct.pack('<Q', double_bits))[0] - 1
     elif browser == 'firefox':
-        double = float(out & 0x1FFFFFFFFFFFFFFF) / (0x1 << 53) 
+        double = float(out & 0xFFFFFFFFFFFFFFFF) / (0x1 << 53) 
     elif browser == 'safari':
-        double = float(out & 0x1FFFFFFFFFFFFFFF) * (1.0 / (0x1 << 53))
+        double = float(out & 0xFFFFFFFFFFFFFFFF) * (1.0 / (0x1 << 53))
     return double
 
 
