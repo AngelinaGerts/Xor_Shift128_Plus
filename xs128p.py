@@ -131,7 +131,7 @@ def main():
     # In your browser's JavaScript console:
     # _ = []; for(var i=0; i<15; ++i) { _.push(Math.random()) } ; console.log(_)
     # Enter at least the 3 first random numbers you observed here:
-    dubs = [0.807238201333032526359759601629, 0.534588817864327927860307221469, 0.021134662213999466230883668637]
+    dubs = [0.534588817864327927860307221469, 0.021134662213999466230883668637, 0.390099492713366520987531922041]
     if browser == 'chrome':
         dubs = dubs[::-1]
 
