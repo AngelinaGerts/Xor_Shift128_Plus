@@ -149,7 +149,7 @@ def main():
         generated.append(recovered)
 
     # setup symbolic state for xorshift128+
-    ostate0, ostate1 = BitVecs('ostate0 ostate1', 64)
+    ostate0, ostate1 = BitVecs('ostate0 ostate1', 128)
     sym_state0 = ostate0
     sym_state1 = ostate1
     slvr = Solver()
