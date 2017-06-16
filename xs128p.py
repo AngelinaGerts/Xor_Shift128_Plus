@@ -33,10 +33,10 @@ def sym_xs128p(slvr, sym_state0, sym_state1, generated, browser):
     
     condition = Bool('c%d' % int(generated * random.random()))
     if browser == 'chrome':
-        impl = Implies(condition, (calc & 0xFFFFFFFFFFFFF) == int(generated))
+        impl = Implies(condition, (calc & 0xFFFFFFFFFFFFFFFF) == int(generated))
     elif browser == 'firefox' or browser == 'safari':
         # Firefox and Safari save an extra bit
-        impl = Implies(condition, (calc & 0x1FFFFFFFFFFFFF) == int(generated))
+        impl = Implies(condition, (calc & 0xFFFFFFFFFFFFFFFF) == int(generated))
 
     slvr.add(impl)
     return sym_state0, sym_state1, [condition]
@@ -110,12 +110,12 @@ def power_ball(generated, browser):
     # (rand_uint64 & ((1 << 53) - 1) * (1.0 / (1 << 53)))
 def to_double(browser, out):
     if browser == 'chrome':
-        double_bits = (out & 0xFFFFFFFFFFFFF) | 0x3FF0000000000000
+        double_bits = (out & 0xFFFFFFFFFFFFFFFF) | 0x3FFFFFFFFFFFFFFFF
         double = struct.unpack('d', struct.pack('<Q', double_bits))[0] - 1
     elif browser == 'firefox':
-        double = float(out & 0x1FFFFFFFFFFFFF) / (0x1 << 53) 
+        double = float(out & 0x1FFFFFFFFFFFFFFF) / (0x1 << 53) 
     elif browser == 'safari':
-        double = float(out & 0x1FFFFFFFFFFFFF) * (1.0 / (0x1 << 53))
+        double = float(out & 0x1FFFFFFFFFFFFFFF) * (1.0 / (0x1 << 53))
     return double
 
 
@@ -124,8 +124,8 @@ def main():
         # Safari tests have always turned up UNSAT
         # Wait for an update from Apple?
     # browser = 'safari'
-    #browser = 'chrome'
-     browser = 'firefox'
+    browser = 'chrome'
+    #browser = 'firefox'
     print 'BROWSER: %s' % browser
 
     # In your browser's JavaScript console:
@@ -141,7 +141,7 @@ def main():
     generated = []
     for idx in xrange(3):
         if browser == 'chrome':
-            recovered = struct.unpack('<Q', struct.pack('d', dubs[idx] + 1))[0] & 0xFFFFFFFFFFFFF 
+            recovered = struct.unpack('<Q', struct.pack('d', dubs[idx] + 1))[0] & 0xFFFFFFFFFFFFFFFF 
         elif browser == 'firefox':
             recovered = dubs[idx] * (0x1 << 53) 
         elif browser == 'safari':
