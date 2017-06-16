@@ -99,7 +99,7 @@ def power_ball(generated, browser):
 
         # generate / print power number or w/e it's called
         double = gen[5]
-        val = int(math.floor(double * 26) + 1)
+        val = int(math.floor(double) + 1)
         print val
 
 # Firefox nextDouble():
@@ -131,7 +131,7 @@ def main():
     # In your browser's JavaScript console:
     # _ = []; for(var i=0; i<5; ++i) { _.push(Math.random()) } ; console.log(_)
     # Enter at least the 3 first random numbers you observed here:
-    dubs = [0.7730989554765861, 0.8853258934430768, 0.3340370481680579]
+    dubs = [0.807238201333032526359759601629, 0.534588817864327927860307221469, 0.021134662213999466230883668637]
     if browser == 'chrome':
         dubs = dubs[::-1]
 
