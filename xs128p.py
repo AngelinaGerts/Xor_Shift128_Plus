@@ -33,10 +33,10 @@ def sym_xs128p(slvr, sym_state0, sym_state1, generated, browser):
     
     condition = Bool('c%d' % int(generated * random.random()))
     if browser == 'chrome':
-        impl = Implies(condition, (calc & 0xFFFFFFFFFFFFFFFF) == int(generated))
+        impl = Implies(condition, (calc & 0xFFFFFFFFFFFFF) == int(generated))
     elif browser == 'firefox' or browser == 'safari':
         # Firefox and Safari save an extra bit
-        impl = Implies(condition, (calc & 0xFFFFFFFFFFFFFFFF) == int(generated))
+        impl = Implies(condition, (calc & 0x1FFFFFFFFFFFFF) == int(generated))
 
     slvr.add(impl)
     return sym_state0, sym_state1, [condition]
@@ -110,12 +110,12 @@ def power_ball(generated, browser):
     # (rand_uint64 & ((1 << 53) - 1) * (1.0 / (1 << 53)))
 def to_double(browser, out):
     if browser == 'chrome':
-        double_bits = (out & 0xFFFFFFFFFFFFFFFF) | 0x3FF0000000000000
+        double_bits = (out & 0xFFFFFFFFFFFFF) | 0x3FF0000000000000
         double = struct.unpack('d', struct.pack('<Q', double_bits))[0] - 1
     elif browser == 'firefox':
-        double = float(out & 0xFFFFFFFFFFFFFFFF) / (0x1 << 53) 
+        double = float(out & 0x1FFFFFFFFFFFFF) / (0x1 << 53) 
     elif browser == 'safari':
-        double = float(out & 0xFFFFFFFFFFFFFFFF) * (1.0 / (0x1 << 53))
+        double = float(out & 0x1FFFFFFFFFFFFF) * (1.0 / (0x1 << 53))
     return double
 
 
@@ -124,14 +124,14 @@ def main():
         # Safari tests have always turned up UNSAT
         # Wait for an update from Apple?
     # browser = 'safari'
-    browser = 'firefox'
-    # browser = 'firefox'
+    #browser = 'chrome'
+     browser = 'firefox'
     print 'BROWSER: %s' % browser
 
     # In your browser's JavaScript console:
-    # _ = []; for(var i=0; i<15; ++i) { _.push(Math.random()) } ; console.log(_)
+    # _ = []; for(var i=0; i<5; ++i) { _.push(Math.random()) } ; console.log(_)
     # Enter at least the 3 first random numbers you observed here:
-    dubs = [0.534588817864327927860307221469, 0.021134662213999466230883668637, 0.390099492713366520987531922041]
+    dubs = [0.807238201333032526359759601629, 0.534588817864327927860307221469, 0.021134662213999466230883668637]
     if browser == 'chrome':
         dubs = dubs[::-1]
 
@@ -141,7 +141,7 @@ def main():
     generated = []
     for idx in xrange(3):
         if browser == 'chrome':
-            recovered = struct.unpack('<Q', struct.pack('d', dubs[idx] + 1))[0] & 0xFFFFFFFFFFFFFFFF 
+            recovered = struct.unpack('<Q', struct.pack('d', dubs[idx] + 1))[0] & 0xFFFFFFFFFFFFF 
         elif browser == 'firefox':
             recovered = dubs[idx] * (0x1 << 53) 
         elif browser == 'safari':
