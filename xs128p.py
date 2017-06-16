@@ -81,7 +81,7 @@ def power_ball(generated, browser):
 
         # generate 5 winning numbers
         nums = []
-        for jdx in xrange(10):
+        for jdx in xrange(5):
             index = int(gen[jdx] * len(poss))
             val = poss[index]
             poss = poss[:index] + poss[index+1:]
@@ -98,7 +98,7 @@ def power_ball(generated, browser):
         print sorted(nums),
 
         # generate / print power number or w/e it's called
-        double = gen[5]
+        double = gen[10]
         val = int(math.floor(double * 30) + 1)
         print val
 
@@ -131,7 +131,7 @@ def main():
     # In your browser's JavaScript console:
     # _ = []; for(var i=0; i<5; ++i) { _.push(Math.random()) } ; console.log(_)
     # Enter at least the 3 first random numbers you observed here:
-    dubs = [0.807238201333032526359759601629, 0.534588817864327927860307221469, 0.021134662213999466230883668637, 0.390099492713366520987531922041, 0.881243971847287432516300024156]
+    dubs = [0.807238201333032526359759601629, 0.534588817864327927860307221469, 0.021134662213999466230883668637, 0.390099492713366520987531922041]
     if browser == 'chrome':
         dubs = dubs[::-1]
 
