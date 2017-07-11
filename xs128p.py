@@ -7,15 +7,15 @@ from z3 import *
 
 # xor_shift_128_plus algorithm
 def xs128p(state0, state1):
-    s1 = state0 & 0xFFFFFFFFFFFFFFFF
-    s0 = state1 & 0xFFFFFFFFFFFFFFFF
-    s1 ^= (s1 << 23) & 0xFFFFFFFFFFFFFFFF
-    s1 ^= (s1 >> 17) & 0xFFFFFFFFFFFFFFFF
-    s1 ^= s0 & 0xFFFFFFFFFFFFFFFF
-    s1 ^= (s0 >> 26) & 0xFFFFFFFFFFFFFFFF 
-    state0 = state1 & 0xFFFFFFFFFFFFFFFF
-    state1 = s1 & 0xFFFFFFFFFFFFFFFF
-    generated = (state0 + state1) & 0xFFFFFFFFFFFFFFFF
+    s1 = state0
+    s0 = state1
+    s1 ^= (s1 << 23)
+    s1 ^= (s1 >> 17)
+    s1 ^= s0
+    s1 ^= (s0 >> 26)
+    state0 = state1
+    state1 = s1
+    generated = (state0 + state1)
 
     return state0, state1, generated
 
@@ -33,10 +33,10 @@ def sym_xs128p(slvr, sym_state0, sym_state1, generated, browser):
     
     condition = Bool('c%d' % int(generated * random.random()))
     if browser == 'chrome':
-        impl = Implies(condition, (calc & 0xFFFFFFFFFFFFF) == int(generated))
+        impl = Implies(condition, (calc) == int(generated))
     elif browser == 'firefox' or browser == 'safari':
         # Firefox and Safari save an extra bit
-        impl = Implies(condition, (calc & 0x1FFFFFFFFFFFFF) == int(generated))
+        impl = Implies(condition, (calc) == int(generated))
 
     slvr.add(impl)
     return sym_state0, sym_state1, [condition]
@@ -45,7 +45,7 @@ def reverse17(val):
     return val ^ (val >> 17) ^ (val >> 34) ^ (val >> 51)
 
 def reverse23(val):
-    return (val ^ (val << 23) ^ (val << 46)) & 0xFFFFFFFFFFFFFFFF
+    return (val ^ (val << 23) ^ (val << 46))
 
 def xs128p_backward(state0, state1):
     prev_state1 = state0
@@ -53,7 +53,7 @@ def xs128p_backward(state0, state1):
     prev_state0 = prev_state0 ^ state0
     prev_state0 = reverse17(prev_state0)
     prev_state0 = reverse23(prev_state0)
-    generated = (prev_state0 + prev_state1) & 0xFFFFFFFFFFFFFFFF
+    generated = (prev_state0 + prev_state1)
     return prev_state0, prev_state1, generated
 
 # Print 'last seen' random number
@@ -113,7 +113,7 @@ def to_double(browser, out):
         double_bits = (out & 0xFFFFFFFFFFFFF) | 0x3FF0000000000000
         double = struct.unpack('d', struct.pack('<Q', double_bits))[0] - 1
     elif browser == 'firefox':
-        double = float(out & 0x1FFFFFFFFFFFFF) / (0x1 << 53) 
+        double = float(out) / (0x1 << 53) 
     elif browser == 'safari':
         double = float(out & 0x1FFFFFFFFFFFFF) * (1.0 / (0x1 << 53))
     return double
@@ -131,7 +131,7 @@ def main():
     # In your browser's JavaScript console:
     # _ = []; for(var i=0; i<5; ++i) { _.push(Math.random()) } ; console.log(_)
     # Enter at least the 3 first random numbers you observed here:
-    dubs = [0.988808163904773116763868272965, 0.478086858400629626302661379960, 0.223703288059612572436206198222]
+    dubs = [0.855066632818213482464352135046, 0.369830531387084773248155794285, 0.745012536585566814426710356971, 0.988808163904773116763868272965, 0.478086858400629626302661379960, 0.223703288059612572436206198222, 0.023646722087554337127966979540]
     if browser == 'chrome':
         dubs = dubs[::-1]
 
