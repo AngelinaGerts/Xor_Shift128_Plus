@@ -102,8 +102,8 @@ def power_ball(generated, browser):
         val = int(math.floor(double * 26) + 1)
         print val
 
-# Firefox nextDouble():
-    # (rand_uint64 & ((1 << 53) - 1)) / (1 << 53)
+ Firefox nextDouble():
+    (rand_uint64 & ((1 << 53) - 1)) / (1 << 53)
 # Chrome nextDouble():
     # ((rand_uint64 & ((1 << 52) - 1)) | 0x3FF0000000000000) - 1.0
 # Safari weakRandom.get():
@@ -124,8 +124,8 @@ def main():
         # Safari tests have always turned up UNSAT
         # Wait for an update from Apple?
     # browser = 'safari'
-     browser = 'chrome'
-    # browser = 'firefox'
+    # browser = 'chrome'
+     browser = 'firefox'
     print 'BROWSER: %s' % browser
 
     # In your browser's JavaScript console:
